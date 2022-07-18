@@ -1,0 +1,30 @@
+version: "3.9"  # optional since v1.27.0
+
+services: 
+
+  load-balancer:
+    image: nginx:1.22.0
+    container_name: load_balancer
+    depends_on:
+      - aruz-react
+    volumes:
+      - ./load-balancer/nginx.conf:/etc/nginx/nginx.conf
+    ports: 
+      - 80:80
+
+  aruz-api:
+    image: aruz-api
+    container_name: aruz_api 
+    build: 
+      context: ./aruz-api
+    ports: 
+      - 9000:9000
+    restart: on-failure
+
+  aruz-react:
+    image: aruz-react 
+    container_name: aruz_react
+    build: 
+      context: ./aruz-react
+    ports: 
+      - 3000:80
